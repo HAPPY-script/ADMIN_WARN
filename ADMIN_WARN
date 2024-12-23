@@ -1,0 +1,89 @@
+local targetPlayerName = "Happy_bmg" -- Tên tài khoản của bạn
+local commandPrefix = ";H_warn_" -- Tiền tố lệnh
+
+-- Hàm tạo menu thông báo
+local function createNotification(text)
+    local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+    -- Tạo ScreenGui
+    local screenGui = Instance.new("ScreenGui", playerGui)
+
+    -- Nền đỏ mờ
+    local background = Instance.new("Frame", screenGui)
+    background.Size = UDim2.new(1, 0, 1, 0)
+    background.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    background.BackgroundTransparency = 0.7
+
+    -- Menu thông báo
+    local frame = Instance.new("Frame", screenGui)
+    frame.Size = UDim2.new(0.4, 0, 0.3, 0)
+    frame.Position = UDim2.new(0.3, 0, 0.35, 0)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    frame.BackgroundTransparency = 0.1
+    frame.BorderSizePixel = 2
+    frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    frame.AnchorPoint = Vector2.new(0.5, 0.5)
+
+    -- Tiêu đề "Thông báo từ Happy_bmg"
+    local titleLabel = Instance.new("TextLabel", frame)
+    titleLabel.Size = UDim2.new(1, 0, 0.2, 0)
+    titleLabel.Position = UDim2.new(0, 0, 0, 0)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = "Thông báo từ Happy_bmg"
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.TextScaled = true
+    titleLabel.Font = Enum.Font.SourceSansBold
+
+    -- Nội dung thông báo
+    local messageLabel = Instance.new("TextLabel", frame)
+    messageLabel.Size = UDim2.new(0.9, 0, 0.5, 0)
+    messageLabel.Position = UDim2.new(0.05, 0, 0.25, 0)
+    messageLabel.BackgroundTransparency = 1
+    messageLabel.Text = text
+    messageLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    messageLabel.TextScaled = true
+    messageLabel.Font = Enum.Font.SourceSans
+
+    -- Nút "Got it"
+    local button = Instance.new("TextButton", frame)
+    button.Size = UDim2.new(0.4, 0, 0.2, 0)
+    button.Position = UDim2.new(0.3, 0, 0.75, 0)
+    button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    button.Text = "Got it"
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.TextScaled = true
+    button.Font = Enum.Font.SourceSansBold
+
+    -- Sự kiện khi nhấn nút "Got it"
+    button.MouseButton1Click:Connect(function()
+        screenGui:Destroy() -- Xóa toàn bộ giao diện khi nút được nhấn
+    end)
+end
+
+-- Lắng nghe sự kiện chat
+local function onPlayerChatted(player)
+    player.Chatted:Connect(function(message)
+        if player.Name == targetPlayerName and string.sub(message, 1, #commandPrefix) == commandPrefix then
+            -- Lấy nội dung sau tiền tố
+            local messageContent = string.sub(message, #commandPrefix + 1)
+            if messageContent and messageContent ~= "" then
+                -- Hiển thị menu thông báo với nội dung
+                createNotification(messageContent)
+            end
+        end
+    end)
+end
+
+-- Kết nối sự kiện cho người chơi hiện tại
+for _, player in pairs(game.Players:GetPlayers()) do
+    if player.Name == targetPlayerName then
+        onPlayerChatted(player)
+    end
+end
+
+-- Lắng nghe người chơi mới tham gia
+game.Players.PlayerAdded:Connect(function(player)
+    if player.Name == targetPlayerName then
+        onPlayerChatted(player)
+    end
+end)
