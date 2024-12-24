@@ -8,16 +8,14 @@ local function createNotification(text)
     -- Tạo ScreenGui
     local screenGui = Instance.new("ScreenGui", playerGui)
 
-    -- Nền đỏ mờ
-    local background = Instance.new("Frame", screenGui)
-    background.Size = UDim2.new(1, 0, 1, 0)
-    background.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    background.BackgroundTransparency = 0.7
+    -- Hiệu ứng mờ nền
+    local blurEffect = Instance.new("BlurEffect", game:GetService("Lighting"))
+    blurEffect.Size = 24
 
     -- Menu thông báo
     local frame = Instance.new("Frame", screenGui)
     frame.Size = UDim2.new(0.4, 0, 0.3, 0)
-    frame.Position = UDim2.new(0.3, 0, 0.35, 0)
+    frame.Position = UDim2.new(0.5, 0, 0.5, 0) -- Chính giữa màn hình
     frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     frame.BackgroundTransparency = 0.1
     frame.BorderSizePixel = 2
@@ -32,7 +30,7 @@ local function createNotification(text)
     titleLabel.Text = "Thông báo từ Happy_bmg"
     titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.TextScaled = true
-    titleLabel.Font = Enum.Font.SourceSansBold
+    titleLabel.Font = Enum.Font.GothamBold
 
     -- Nội dung thông báo
     local messageLabel = Instance.new("TextLabel", frame)
@@ -42,7 +40,7 @@ local function createNotification(text)
     messageLabel.Text = text
     messageLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     messageLabel.TextScaled = true
-    messageLabel.Font = Enum.Font.SourceSans
+    messageLabel.Font = Enum.Font.Gotham
 
     -- Nút "Got it"
     local button = Instance.new("TextButton", frame)
@@ -52,11 +50,12 @@ local function createNotification(text)
     button.Text = "Got it"
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.TextScaled = true
-    button.Font = Enum.Font.SourceSansBold
+    button.Font = Enum.Font.GothamBold
 
     -- Sự kiện khi nhấn nút "Got it"
     button.MouseButton1Click:Connect(function()
         screenGui:Destroy() -- Xóa toàn bộ giao diện khi nút được nhấn
+        blurEffect:Destroy() -- Xóa hiệu ứng mờ
     end)
 end
 
